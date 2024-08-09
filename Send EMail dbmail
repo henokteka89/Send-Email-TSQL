@@ -1,0 +1,15 @@
+ 
+
+    IF @something > 0
+    BEGIN
+        -- Construct email body
+        SET @body = 'The following things were found:' + CHAR(13) + CHAR(10) +
+                   --e.g. (SELECT STRING_AGG('Database: ' + DatabaseName + ', User: ' + OrphanedUser, CHAR(13) + CHAR(10))
+                     FROM ##OrphanedUsersLog);
+
+        -- Send email notification
+        EXEC msdb.dbo.sp_send_dbmail
+            @profile_name = 'YourProfileName',  -- Replace with your Database Mail profile name
+            @recipients = 'your-email@example.com',  -- Replace with your email address
+            @subject = 'Orphaned Users Detected',
+            @body = @body;
